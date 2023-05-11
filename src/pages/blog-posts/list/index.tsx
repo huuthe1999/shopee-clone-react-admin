@@ -1,4 +1,12 @@
-import { DateField, EditButton, List, MarkdownField, ShowButton, useTable } from '@refinedev/antd'
+import {
+	DateField,
+	DeleteButton,
+	EditButton,
+	List,
+	MarkdownField,
+	ShowButton,
+	useTable
+} from '@refinedev/antd'
 import { BaseRecord, IResourceComponentsProps, useMany } from '@refinedev/core'
 import { Space, Table } from 'antd'
 import React from 'react'
@@ -19,8 +27,8 @@ export const BlogPostList: React.FC<IResourceComponentsProps> = () => {
 	return (
 		<List>
 			<Table {...tableProps} rowKey="id">
-				<Table.Column dataIndex="id" title="Id" />
-				<Table.Column dataIndex="title" title="Title" />
+				<Table.Column dataIndex="id" title="Id" sorter />
+				<Table.Column dataIndex="title" title="Title" sorter={{ multiple: 1 }} />
 				<Table.Column
 					dataIndex="content"
 					title="Content"
@@ -50,6 +58,7 @@ export const BlogPostList: React.FC<IResourceComponentsProps> = () => {
 						<Space>
 							<EditButton hideText size="small" recordItemId={record.id} />
 							<ShowButton hideText size="small" recordItemId={record.id} />
+							<DeleteButton hideText size="small" recordItemId={record.id} />
 						</Space>
 					)}
 				/>

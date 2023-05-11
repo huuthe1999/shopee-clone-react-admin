@@ -1845,14 +1845,14 @@
   resolved "https://registry.yarnpkg.com/@reach/observe-rect/-/observe-rect-1.2.0.tgz#d7a6013b8aafcc64c778a0ccb83355a11204d3b2"
   integrity sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==
 
-"@refinedev/antd@^5.7.0":
-  version "5.13.2"
-  resolved "https://registry.yarnpkg.com/@refinedev/antd/-/antd-5.13.2.tgz#b335a3846624613f4a41eaac54842acc3c2bc57b"
-  integrity sha512-z6UAAPyUjSgQ10o0O6Hs5MNHT+gE6c+SiNJhjNmA6pficozTXG9Y/44Dps3PrU6OzTQNTdlsg6cTr9MqzgwS2g==
+"@refinedev/antd@5.16.2":
+  version "5.16.2"
+  resolved "https://registry.yarnpkg.com/@refinedev/antd/-/antd-5.16.2.tgz#4033838548cfdc366f531613ebc63dcc37dc9bb4"
+  integrity sha512-ixgjTivbEsdoYnT+kqexKeZ5T/o+Aw9y0Nr+Rwh5tCTQxS3TilnkmvrYFam3QEVDl59vIVc3OxkdX/KDniEyig==
   dependencies:
     "@ant-design/icons" "^5.0.1"
     "@ant-design/pro-layout" "7.8.3"
-    "@refinedev/ui-types" "^1.12.0"
+    "@refinedev/ui-types" "^1.14.0"
     "@tanstack/react-query" "^4.10.1"
     antd "^5.0.5"
     dayjs "^1.10.7"
@@ -1895,7 +1895,23 @@
     temp "^0.9.4"
     tslib "^2.3.1"
 
-"@refinedev/core@^4.1.2", "@refinedev/core@^4.5.4", "@refinedev/core@^4.5.8":
+"@refinedev/core@4.14.3":
+  version "4.14.3"
+  resolved "https://registry.yarnpkg.com/@refinedev/core/-/core-4.14.3.tgz#f39f7bb0c2cd056f093b54b11c1ae0502f9f3656"
+  integrity sha512-bUnfk+UDBtlj83rXgtEpt+8J8d7OaF/T6Tdx/5JX59holDnkdft2D0xek0bRHNJyM3aRtyWov0tNICkRuAeRzQ==
+  dependencies:
+    "@tanstack/react-query" "^4.10.1"
+    "@tanstack/react-query-devtools" "^4.10.1"
+    export-to-csv-fix-source-map "^0.2.1"
+    lodash "^4.17.21"
+    lodash-es "^4.17.21"
+    papaparse "^5.3.0"
+    pluralize "^8.0.0"
+    qs "^6.10.1"
+    tslib "^2.3.1"
+    warn-once "^0.1.0"
+
+"@refinedev/core@^4.1.2", "@refinedev/core@^4.5.4":
   version "4.14.0"
   resolved "https://registry.yarnpkg.com/@refinedev/core/-/core-4.14.0.tgz#6a81d13fce8e15f8cc170e9a320684667c4de7b3"
   integrity sha512-LEKMAWWbjGte7ZYiPDI1MTq4gE0VDfCsgMDZbG3f3+bPkqFPo7mDUH2bzAtL+wr6EqoknxbDEYywKxrzgW73qg==
@@ -1911,10 +1927,10 @@
     tslib "^2.3.1"
     warn-once "^0.1.0"
 
-"@refinedev/inferencer@^3.1.4":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@refinedev/inferencer/-/inferencer-3.3.0.tgz#527756836e4b0c97aa3a6ecbb72fdc6393f4e342"
-  integrity sha512-Z4xNJyIrdJxK5x7RItTjbt5hWJuwJ2cOHKWJnp/6A7QgTYuR6+1XWVVoM0qAgDEIuErLozbcL4B4Z1Zs9UdTYg==
+"@refinedev/inferencer@3.3.2":
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/@refinedev/inferencer/-/inferencer-3.3.2.tgz#1cc608f6a5a945327a31b8887567a8e86d568823"
+  integrity sha512-g9dvXl5oQazpkAwXeU+2x+TwOEG5Hblj8RlStLnrRN+7owiDuh7K/eWsFUGcIajm4TBLDf4r6xvTWm8il4vjbg==
   dependencies:
     "@aliemir/react-live" "^4.0.0"
     "@refinedev/core" "^4.1.2"
@@ -1944,7 +1960,7 @@
     qs "^6.10.1"
     react-router-dom "^6.8.1"
 
-"@refinedev/simple-rest@^4.0.0":
+"@refinedev/simple-rest@^4.5.0":
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/@refinedev/simple-rest/-/simple-rest-4.5.0.tgz#0e9ca41268411b50adcbe1b969adba5653bf2c7d"
   integrity sha512-T915EZy+GucLoTY1ODXgnuJ1B8QVPyFG3xOaNRYFwLeANkIYhkGYNItczU9JprWciXh/soIdaJciAmJDfpd5Ig==
@@ -1952,10 +1968,10 @@
     axios "^0.26.1"
     query-string "^7.1.1"
 
-"@refinedev/ui-types@^1.12.0":
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/@refinedev/ui-types/-/ui-types-1.12.0.tgz#051186b9200005223c66e3e034e477109f12e066"
-  integrity sha512-KRXvbtigZ5GAT1TL10g74eP15NDJYamjHonOxobsL67x6VrvC8ZXKr1bqYyNONqIG5uVqGdV0TZzTNeZiVq2qg==
+"@refinedev/ui-types@^1.14.0":
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/@refinedev/ui-types/-/ui-types-1.14.0.tgz#f26e6d6cba34c27e7cd785c02723bb467bcdca78"
+  integrity sha512-aQQZrVfQJmjO0t8+dmRaZNALNfKDJgDGJxnFMZXByCvPK4UnFPvc0IVoXwi+LIHoB6+VOVU+gUi8XWdJ125Swg==
   dependencies:
     "@refinedev/core" "^4.5.4"
     dayjs "^1.10.7"
@@ -3252,7 +3268,12 @@ axe-core@^4.6.2:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.7.0.tgz#34ba5a48a8b564f67e103f0aa5768d76e15bbbbf"
   integrity sha512-M0JtH+hlOL5pLQwHOLNYZaXuhqmvS8oExsqB1SBYgA4Dk7u/xx+YdGHXaK5pyUfed5mYXdlYiphWq3G8cRi5JQ==
 
-axios@^0.26.1:
+axios-auth-refresh@^3.3.6:
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/axios-auth-refresh/-/axios-auth-refresh-3.3.6.tgz#a879f6296a889d6616e51069c2a8135b697966e7"
+  integrity sha512-2CeBUce/SxIfFxow5/n8vApJ97yYF6qoV4gh1UrswT7aEOnlOdBLxxyhOI4IaxGs6BY0l8YujU2jlc4aCmK17Q==
+
+axios@0.26.1, axios@^0.26.1:
   version "0.26.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.26.1.tgz#1ede41c51fcf51bbbd6fd43669caaa4f0495aaa9"
   integrity sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==
@@ -9296,6 +9317,16 @@ qs@^6.10.1:
   integrity sha512-0wsrzgTz/kAVIeuxSjnpGC56rzYtr6JT/2BwEvMaPhFIoYa1aGO8LbzuU1R0uUYQkLpWBTOj0l/CLAJB64J6nQ==
   dependencies:
     side-channel "^1.0.4"
+
+query-string@7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-7.1.1.tgz#754620669db978625a90f635f12617c271a088e1"
+  integrity sha512-MplouLRDHBZSG9z7fpuAAcI7aAYjDLhtsiVZsevsfaHWDS2IDdORKbSd1kWUA+V4zyva/HZoSfpwnYMMQDhb0w==
+  dependencies:
+    decode-uri-component "^0.2.0"
+    filter-obj "^1.1.0"
+    split-on-first "^1.0.0"
+    strict-uri-encode "^2.0.0"
 
 query-string@^7.1.1:
   version "7.1.3"

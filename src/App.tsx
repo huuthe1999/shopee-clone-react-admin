@@ -1,66 +1,161 @@
-import { ErrorComponent, ThemedLayoutV2, notificationProvider } from '@refinedev/antd'
-import '@refinedev/antd/dist/reset.css'
-import { GitHubBanner, Refine } from '@refinedev/core'
-import { AntdInferencer } from '@refinedev/inferencer/antd'
-import { RefineKbar, RefineKbarProvider } from '@refinedev/kbar'
+import { PATHS, RESOURCES } from "@constants";
+import {
+    AuthPage,
+    ErrorComponent,
+    ThemedLayoutV2,
+    ThemedSiderV2,
+    ThemedTitleV2,
+    notificationProvider,
+} from "@refinedev/antd";
+import { Authenticated, Refine } from "@refinedev/core";
+import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import routerBindings, {
-	NavigateToResource,
-	UnsavedChangesNotifier
-} from '@refinedev/react-router-v6'
-import dataProvider from '@refinedev/simple-rest'
-import { BlogPostEdit } from 'pages/blog-posts/edit'
-import { BlogPostList } from 'pages/blog-posts/list'
-import { BlogPostShow } from 'pages/blog-posts/show'
-import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
-import { ColorModeContextProvider } from './contexts/color-mode'
+    CatchAllNavigate,
+    NavigateToResource,
+    UnsavedChangesNotifier,
+} from "@refinedev/react-router-v6";
+import dataProvider from "@refinedev/simple-rest";
+import { Header, LogoIcon } from "components";
+import { axiosInstance } from "config";
+import { ColorModeContextProvider } from "contexts";
+import { CategoryList } from "pages/category/list";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import { authProvider } from "./authProvider";
+
+import "@refinedev/antd/dist/reset.css";
 
 function App() {
-	return (
-		<BrowserRouter>
-			<GitHubBanner />
-			<RefineKbarProvider>
-				<ColorModeContextProvider>
-					<Refine
-						notificationProvider={notificationProvider}
-						routerProvider={routerBindings}
-						dataProvider={dataProvider('https://api.fake-rest.refine.dev')}
-						resources={[
-							{
-								name: 'blog_posts',
-								list: '/blog-posts',
-								show: '/blog-posts/show/:id',
-								create: '/blog-posts/create',
-								edit: '/blog-posts/edit/:id'
-							}
-						]}
-						options={{
-							syncWithLocation: true,
-							warnWhenUnsavedChanges: true
-						}}>
-						<Routes>
-							<Route
-								element={
-									<ThemedLayoutV2>
-										<Outlet />
-									</ThemedLayoutV2>
-								}>
-								<Route index element={<NavigateToResource resource="blog_posts" />} />
-								<Route path="blog-posts">
-									<Route index element={<BlogPostList />} />
-									<Route path="show/:id" element={<BlogPostShow />} />
-									<Route path="edit/:id" element={<BlogPostEdit />} />
-									<Route path="create" element={<AntdInferencer />} />
-								</Route>
-								<Route path="*" element={<ErrorComponent />} />
-							</Route>
-						</Routes>
-						<RefineKbar />
-						<UnsavedChangesNotifier />
-					</Refine>
-				</ColorModeContextProvider>
-			</RefineKbarProvider>
-		</BrowserRouter>
-	)
+    return (
+        <BrowserRouter>
+            <RefineKbarProvider>
+                <ColorModeContextProvider>
+                    <Refine
+                        authProvider={authProvider}
+                        notificationProvider={notificationProvider}
+                        routerProvider={routerBindings}
+                        dataProvider={dataProvider(
+                            process.env.REACT_APP_BASE_URL as string,
+                            axiosInstance
+                        )}
+                        resources={[
+                            {
+                                name: RESOURCES.categories,
+                                list: `${PATHS.categories.default}`,
+                                // show: `${PATHS.categories.default}/${PATHS.categories.show}`,
+                                // create: `${PATHS.categories.default}/${PATHS.categories.create}`,
+                                // edit: `${PATHS.categories.default}/${PATHS.categories.edit}`,
+                                meta: {
+                                    canDelete: true,
+                                },
+                            },
+                        ]}
+                        options={{
+                            syncWithLocation: true,
+                            warnWhenUnsavedChanges: true,
+                            reactQuery: {
+                                clientConfig: {
+                                    defaultOptions: {
+                                        queries: {
+                                            retry: false,
+                                        },
+                                    },
+                                },
+                            },
+                        }}
+                    >
+                        <Routes>
+                            <Route
+                                element={
+                                    <Authenticated
+                                        fallback={
+                                            <CatchAllNavigate
+                                                to={PATHS.login}
+                                            />
+                                        }
+                                    >
+                                        <ThemedLayoutV2
+                                            Header={() => <Header sticky />}
+                                            Sider={() => (
+                                                <ThemedSiderV2
+                                                    fixed
+                                                    Title={({ collapsed }) => (
+                                                        <ThemedTitleV2
+                                                            // collapsed is a boolean value that indicates whether the <Sidebar> is collapsed or not
+                                                            collapsed={
+                                                                collapsed
+                                                            }
+                                                            icon={<LogoIcon />}
+                                                            text="Shopee Admin"
+                                                        />
+                                                    )}
+                                                />
+                                            )}
+                                        >
+                                            <Outlet />
+                                        </ThemedLayoutV2>
+                                    </Authenticated>
+                                }
+                            >
+                                <Route index element={<NavigateToResource />} />
+
+                                <Route path={PATHS.categories.default}>
+                                    <Route index element={<CategoryList />} />
+                                    {/* <Route path={`${PATHS.categories.show}`} element={<BlogPostShow />} />
+									<Route path={`${PATHS.categories.edit}`} element={<BlogPostEdit />} />
+									<Route path={`${PATHS.categories.create}`} element={<BlogPostCreate />} /> */}
+                                </Route>
+                            </Route>
+
+                            <Route
+                                element={
+                                    <Authenticated fallback={<Outlet />}>
+                                        <NavigateToResource />
+                                    </Authenticated>
+                                }
+                            >
+                                <Route
+                                    path={PATHS.login}
+                                    element={
+                                        <AuthPage
+                                            type="login"
+                                            title={
+                                                <ThemedTitleV2
+                                                    collapsed={false}
+                                                    text="Shoppe Admin"
+                                                />
+                                            }
+                                        />
+                                    }
+                                />
+                                <Route
+                                    path={PATHS.register}
+                                    element={<AuthPage type="register" />}
+                                />
+                            </Route>
+
+                            <Route
+                                element={
+                                    <Authenticated fallback={<Outlet />}>
+                                        <ThemedLayoutV2
+                                            Sider={() => (
+                                                <ThemedSiderV2 fixed />
+                                            )}
+                                        >
+                                            <Outlet />
+                                        </ThemedLayoutV2>
+                                    </Authenticated>
+                                }
+                            >
+                                <Route path="*" element={<ErrorComponent />} />
+                            </Route>
+                        </Routes>
+                        <RefineKbar />
+                        <UnsavedChangesNotifier />
+                    </Refine>
+                </ColorModeContextProvider>
+            </RefineKbarProvider>
+        </BrowserRouter>
+    );
 }
 
-export default App
+export default App;

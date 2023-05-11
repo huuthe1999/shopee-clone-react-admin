@@ -1,6 +1,12 @@
-import { PropsWithChildren, createContext, useEffect, useState } from "react";
-import { ConfigProvider, theme } from "antd";
 import { RefineThemes } from "@refinedev/antd";
+import { ConfigProvider, theme } from "antd";
+import {
+    PropsWithChildren,
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 
 type ColorModeContextType = {
     mode: string;
@@ -8,7 +14,7 @@ type ColorModeContextType = {
 };
 
 export const ColorModeContext = createContext<ColorModeContextType>(
-    {} as ColorModeContextType,
+    {} as ColorModeContextType
 );
 
 export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
@@ -16,12 +22,12 @@ export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
 }) => {
     const colorModeFromLocalStorage = localStorage.getItem("colorMode");
     const isSystemPreferenceDark = window?.matchMedia(
-        "(prefers-color-scheme: dark)",
+        "(prefers-color-scheme: dark)"
     ).matches;
 
     const systemPreference = isSystemPreferenceDark ? "dark" : "light";
     const [mode, setMode] = useState(
-        colorModeFromLocalStorage || systemPreference,
+        colorModeFromLocalStorage || systemPreference
     );
 
     useEffect(() => {
@@ -57,4 +63,16 @@ export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
             </ConfigProvider>
         </ColorModeContext.Provider>
     );
+};
+
+export const useColorModeContextProvider = () => {
+    const context = useContext(ColorModeContext);
+
+    if (context === undefined) {
+        throw new Error(
+            "useConfigProvider must be used within a ConfigProvider"
+        );
+    }
+
+    return context;
 };
