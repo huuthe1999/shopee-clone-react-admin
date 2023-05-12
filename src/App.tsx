@@ -18,11 +18,12 @@ import dataProvider from "@refinedev/simple-rest";
 import { Header, LogoIcon } from "components";
 import { axiosInstance } from "config";
 import { ColorModeContextProvider } from "contexts";
-import { CategoryList } from "pages/category/list";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { authProvider } from "./authProvider";
 
+import { DashboardOutlined } from "@ant-design/icons";
 import "@refinedev/antd/dist/reset.css";
+import { CategoryList } from "pages/category";
 
 function App() {
     return (
@@ -42,10 +43,12 @@ function App() {
                                 name: RESOURCES.categories,
                                 list: `${PATHS.categories.default}`,
                                 // show: `${PATHS.categories.default}/${PATHS.categories.show}`,
-                                // create: `${PATHS.categories.default}/${PATHS.categories.create}`,
+                                create: `${PATHS.categories.default}/${PATHS.categories.create}`,
                                 // edit: `${PATHS.categories.default}/${PATHS.categories.edit}`,
                                 meta: {
                                     canDelete: true,
+                                    label: "Danh mục",
+                                    icon: <DashboardOutlined />,
                                 },
                             },
                         ]}
@@ -101,8 +104,11 @@ function App() {
                                 <Route path={PATHS.categories.default}>
                                     <Route index element={<CategoryList />} />
                                     {/* <Route path={`${PATHS.categories.show}`} element={<BlogPostShow />} />
-									<Route path={`${PATHS.categories.edit}`} element={<BlogPostEdit />} />
-									<Route path={`${PATHS.categories.create}`} element={<BlogPostCreate />} /> */}
+									<Route path={`${PATHS.categories.edit}`} element={<BlogPostEdit />} /> */}
+                                    {/* <Route
+                                        path={`${PATHS.categories.create}`}
+                                        element={<CategoryCreate />}
+                                    /> */}
                                 </Route>
                             </Route>
 
