@@ -33,7 +33,7 @@
     },
     "scripts": {
         "dev": "set PORT=3001 && refine start",
-        "build": "refine build",
+        "build": "cross-env DISABLE_ESLINT_PLUGIN=true refine build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "refine": "refine"
