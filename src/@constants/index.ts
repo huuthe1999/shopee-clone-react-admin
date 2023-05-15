@@ -1,16 +1,16 @@
 export const PATHS = {
     login: "/login",
     register: "/register",
-    categories: {
-        default: "/categories",
-        show: "show/:id",
-        create: "create",
-        edit: "edit/:id",
-    },
+    categories: "/categories",
+    products: "/products",
 };
 export const RESOURCES = {
     categories: "categories",
     products: "products",
+    provinces: "provinces",
+    show: "show/:id",
+    create: "create",
+    edit: "edit/:id",
 };
 
 export const TOKEN_KEY = "accessToken";
@@ -25,3 +25,10 @@ export const LOGOUT_END_POINT = `${AUTH_ROUTE}/logout`;
 
 export const CATEGORY_ROUTE = "/categories";
 export const CATEGORIES_END_POINT = `${CATEGORY_ROUTE}`;
+
+// Array end point need be changed baseUrl
+export const CHANGE_BASE_URL = [
+    LOGIN_END_POINT,
+    REGISTER_END_POINT,
+    LOGOUT_END_POINT,
+];

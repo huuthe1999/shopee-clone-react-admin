@@ -1,4 +1,4 @@
-import { FormOutlined, MoreOutlined, UploadOutlined } from "@ant-design/icons";
+import { FormOutlined, InboxOutlined, MoreOutlined } from "@ant-design/icons";
 import { RESOURCES } from "@constants";
 import {
     BooleanField,
@@ -7,6 +7,7 @@ import {
     NumberField,
     SaveButton,
     TextField,
+    getDefaultSortOrder,
     getValueFromEvent,
     useDrawerForm,
     useEditableTable,
@@ -24,20 +25,24 @@ import {
     Menu,
     Space,
     Table,
+    Typography,
     Upload,
     message,
 } from "antd";
-import type { UploadFile } from "antd/es/upload/interface";
-import { CategoryCreate } from "components/category";
+import { CategoryCreate, CategoryEdit } from "components/category";
 import { EditProduct } from "components/product";
 import { uploadInstance } from "config";
 import { ICategory, IProduct, IUploadImage } from "interfaces";
-import React, { useState } from "react";
+import React from "react";
+import { encodeId } from "utils";
+
+const { Text } = Typography;
 
 export const CategoryList: React.FC<IResourceComponentsProps> = () => {
     const {
         tableProps,
         formProps,
+        sorters,
         isEditing,
         saveButtonProps,
         cancelButtonProps,
@@ -51,7 +56,29 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
 
     const breakpoint = Grid.useBreakpoint();
 
-    const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const {
+        drawerProps: createDrawerProps,
+        formProps: createFormProps,
+        saveButtonProps: createSaveButtonProps,
+        show: createShow,
+        formLoading: createFormLoading,
+    } = useDrawerForm<ICategory>({
+        action: "create",
+        resource: RESOURCES.categories,
+        redirect: false,
+    });
+
+    const {
+        drawerProps: editDrawerProps,
+        formProps: editFormProps,
+        saveButtonProps: editSaveButtonProps,
+        show: editShow,
+        id: editId,
+    } = useDrawerForm<ICategory>({
+        action: "edit",
+        resource: RESOURCES.categories,
+        redirect: false,
+    });
 
     const moreMenu = (record: ICategory) => (
         <Menu
@@ -76,24 +103,26 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                     />
                 }
                 onClick={() => {
-                    setEditId?.(record._id);
+                    editShow(record._id);
                 }}
             >
-                Chỉnh sửa
+                Chỉnh sửa chi tiết
             </Menu.Item>
         </Menu>
     );
-    const {
-        drawerProps: createDrawerProps,
-        formProps: createFormProps,
-        saveButtonProps: createSaveButtonProps,
-        show: createShow,
-        formLoading: createFormLoading,
-    } = useDrawerForm<ICategory>({
-        action: "create",
-        resource: RESOURCES.categories,
-        redirect: false,
-    });
+
+    const handleOnFinish = (values: any) => {
+        formProps.onFinish?.({
+            ...values,
+            images: values.images.map(({ response, name, uid }: any) => {
+                return {
+                    name,
+                    url: response.secure_url,
+                    uid,
+                };
+            }),
+        });
+    };
 
     return (
         <>
@@ -102,7 +131,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                 createButtonProps={{ onClick: createShow }}
                 title="Danh mục"
             >
-                <Form {...formProps}>
+                <Form {...formProps} onFinish={handleOnFinish}>
                     <Table
                         {...tableProps}
                         expandable={{
@@ -111,6 +140,7 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                                 : undefined,
                         }}
                         rowKey="id"
+                        bordered
                         onRow={(record) => ({
                             // eslint-disable-next-line
                             onClick: (event: any) => {
@@ -121,11 +151,20 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                         })}
                     >
                         <Table.Column<ICategory>
+                            dataIndex="_id"
+                            title="ID"
+                            render={(value, data) => {
+                                return <TextField value={encodeId(value)} />;
+                            }}
+                            width="10%"
+                            align="center"
+                        />
+
+                        <Table.Column<ICategory>
                             dataIndex="images"
                             align="center"
                             render={(value, data) => {
                                 if (isEditing(data._id)) {
-                                    setFileList(value);
                                     return (
                                         <Form.Item noStyle>
                                             <Form.Item
@@ -136,23 +175,8 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                                                 }
                                                 noStyle
                                             >
-                                                <Upload
+                                                <Upload.Dragger
                                                     name="file"
-                                                    onRemove={(file) => {
-                                                        const index =
-                                                            fileList.indexOf(
-                                                                file
-                                                            );
-                                                        const newFileList =
-                                                            fileList.slice();
-                                                        newFileList.splice(
-                                                            index,
-                                                            1
-                                                        );
-                                                        setFileList(
-                                                            newFileList
-                                                        );
-                                                    }}
                                                     customRequest={async ({
                                                         data,
                                                         filename,
@@ -198,16 +222,6 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                                                             );
 
                                                             if (data) {
-                                                                setFileList(
-                                                                    () => [
-                                                                        {
-                                                                            name: data?.original_filename,
-                                                                            uid: data?.version_id,
-                                                                            url: data?.secure_url,
-                                                                        },
-                                                                    ]
-                                                                );
-
                                                                 message.success(
                                                                     "Upload successfully."
                                                                 );
@@ -229,19 +243,42 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                                                             },
                                                         };
                                                     }}
+                                                    maxCount={1}
                                                     defaultFileList={value}
                                                     listType="picture"
                                                     className="upload-list-inline"
                                                     accept="image/png, image/jpeg"
                                                 >
-                                                    <Button
-                                                        icon={
-                                                            <UploadOutlined />
-                                                        }
+                                                    <Space
+                                                        direction="vertical"
+                                                        size={8}
                                                     >
-                                                        Select File (Max: 1)
-                                                    </Button>
-                                                </Upload>
+                                                        <p className="ant-upload-drag-icon">
+                                                            <InboxOutlined />
+                                                        </p>
+                                                        <Text
+                                                            style={{
+                                                                fontWeight: 800,
+                                                                fontSize:
+                                                                    "16px",
+                                                                marginTop:
+                                                                    "8px",
+                                                                padding: 4,
+                                                            }}
+                                                        >
+                                                            Tải ảnh hoặc kéo thả
+                                                            (Max: 1)
+                                                        </Text>
+                                                        <Text
+                                                            style={{
+                                                                fontSize:
+                                                                    "12px",
+                                                            }}
+                                                        >
+                                                            Hỗ trợ png, jpeg
+                                                        </Text>
+                                                    </Space>
+                                                </Upload.Dragger>
                                             </Form.Item>
                                         </Form.Item>
                                     );
@@ -276,11 +313,18 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                                 }
                                 return <TextField value={value} />;
                             }}
+                            defaultSortOrder={getDefaultSortOrder(
+                                "name",
+                                sorters
+                            )}
+                            sorter={{ multiple: 2 }}
                         />
+
                         <Table.Column<ICategory>
                             key="isActive"
                             dataIndex="isActive"
                             title="Trạng thái"
+                            align="center"
                             render={(value, data) => {
                                 if (isEditing(data._id)) {
                                     return (
@@ -295,6 +339,23 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                                 }
                                 return <BooleanField value={value} />;
                             }}
+                        />
+
+                        <Table.Column<ICategory>
+                            dataIndex="createdAt"
+                            title="Ngày tạo"
+                            render={(value) => (
+                                <DateField
+                                    value={value}
+                                    locales="vn"
+                                    format="DD/MM/YYYY, HH:mm A"
+                                />
+                            )}
+                            defaultSortOrder={getDefaultSortOrder(
+                                "createdAt",
+                                sorters
+                            )}
+                            sorter={{ multiple: 1 }}
                         />
 
                         <Table.Column<ICategory>
@@ -340,6 +401,12 @@ export const CategoryList: React.FC<IResourceComponentsProps> = () => {
                 drawerProps={createDrawerProps}
                 formProps={createFormProps}
                 saveButtonProps={createSaveButtonProps}
+            />
+            <CategoryEdit
+                editId={editId}
+                drawerProps={editDrawerProps}
+                formProps={editFormProps}
+                saveButtonProps={editSaveButtonProps}
             />
         </>
     );

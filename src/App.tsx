@@ -15,7 +15,7 @@ import routerBindings, {
     UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
 import dataProvider from "@refinedev/simple-rest";
-import { Header, LogoIcon } from "components";
+import { Header, LogoIcon, PizzaIcon } from "components";
 import { axiosInstance } from "config";
 import { ColorModeContextProvider } from "contexts";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
@@ -24,6 +24,7 @@ import { authProvider } from "./authProvider";
 import { DashboardOutlined } from "@ant-design/icons";
 import "@refinedev/antd/dist/reset.css";
 import { CategoryList } from "pages/category";
+import { ProductList } from "pages/product";
 
 function App() {
     return (
@@ -41,14 +42,26 @@ function App() {
                         resources={[
                             {
                                 name: RESOURCES.categories,
-                                list: `${PATHS.categories.default}`,
+                                list: `${PATHS.categories}`,
                                 // show: `${PATHS.categories.default}/${PATHS.categories.show}`,
-                                create: `${PATHS.categories.default}/${PATHS.categories.create}`,
+                                // create: `${PATHS.categories}/${RESOURCES.create}`,
                                 // edit: `${PATHS.categories.default}/${PATHS.categories.edit}`,
                                 meta: {
                                     canDelete: true,
                                     label: "Danh mục",
                                     icon: <DashboardOutlined />,
+                                },
+                            },
+                            {
+                                name: RESOURCES.products,
+                                list: `${PATHS.products}`,
+                                // show: `${PATHS.categories.default}/${PATHS.categories.show}`,
+                                // create: `${PATHS.products}/${RESOURCES.create}`,
+                                // edit: `${PATHS.categories.default}/${PATHS.categories.edit}`,
+                                meta: {
+                                    canDelete: true,
+                                    label: "Sản phẩm",
+                                    icon: <PizzaIcon />,
                                 },
                             },
                         ]}
@@ -101,8 +114,18 @@ function App() {
                             >
                                 <Route index element={<NavigateToResource />} />
 
-                                <Route path={PATHS.categories.default}>
+                                <Route path={PATHS.categories}>
                                     <Route index element={<CategoryList />} />
+                                    {/* <Route path={`${PATHS.categories.show}`} element={<BlogPostShow />} />
+									<Route path={`${PATHS.categories.edit}`} element={<BlogPostEdit />} /> */}
+                                    {/* <Route
+                                        path={`${PATHS.categories.create}`}
+                                        element={<CategoryCreate />}
+                                    /> */}
+                                </Route>
+
+                                <Route path={PATHS.products}>
+                                    <Route index element={<ProductList />} />
                                     {/* <Route path={`${PATHS.categories.show}`} element={<BlogPostShow />} />
 									<Route path={`${PATHS.categories.edit}`} element={<BlogPostEdit />} /> */}
                                     {/* <Route

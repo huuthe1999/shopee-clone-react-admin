@@ -1,9 +1,10 @@
 import { PATHS, TOKEN_KEY } from "@constants";
 import { AuthBindings } from "@refinedev/core";
+import { message } from "antd";
 import axios, { AxiosError } from "axios";
 import { IBaseErrorResponse, ILoginCredential } from "interfaces";
-import { loginService } from "services/auth";
-import { getLocalStorage, setLocalStorage } from "utils";
+import { logOutService, loginService } from "services/auth";
+import { getLocalStorage, removeLocalStorage, setLocalStorage } from "utils";
 
 export const authProvider: AuthBindings = {
     login: async ({ email, password }: ILoginCredential) => {
@@ -46,7 +47,27 @@ export const authProvider: AuthBindings = {
             };
         }
     },
-    async logout(params) {
+    async logout() {
+        const token = getLocalStorage(TOKEN_KEY);
+        if (token) {
+            try {
+                const { data } = await logOutService();
+                if (data.isSuccess) {
+                    removeLocalStorage(TOKEN_KEY);
+                    message.success(data.message);
+                }
+                return {
+                    success: true,
+                    redirectTo: PATHS.login,
+                };
+            } catch (error) {
+                return {
+                    success: false,
+                };
+            }
+        }
+
+        removeLocalStorage(TOKEN_KEY);
         return {
             success: true,
         };

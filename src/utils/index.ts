@@ -1,1 +1,2 @@
-export * from './localStorage'
+export * from "./encodeId";
+export * from "./localStorage";

@@ -1,4 +1,4 @@
-import { LOGIN_END_POINT, REGISTER_END_POINT, TOKEN_KEY } from "@constants";
+import { CHANGE_BASE_URL, TOKEN_KEY } from "@constants";
 import { HttpError } from "@refinedev/core";
 import axios, { AxiosRequestConfig } from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
@@ -22,7 +22,7 @@ export const authAxiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (request: AxiosRequestConfig) => {
-        if (request.url?.includes(LOGIN_END_POINT || REGISTER_END_POINT)) {
+        if (CHANGE_BASE_URL.includes(request.url as string)) {
             request.baseURL = process.env.REACT_APP_AUTH_URL;
         }
 

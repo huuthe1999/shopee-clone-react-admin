@@ -9,6 +9,10 @@ export interface ICategory {
     name: string;
     isActive: boolean;
     images: IFile[];
+    subCategories: {
+        _id: string;
+        name: string;
+    }[];
     createdAt: string;
     updatedAt: string;
 }

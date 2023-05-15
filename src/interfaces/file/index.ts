@@ -6,6 +6,7 @@ export interface IFile {
     type?: string;
     uid: string;
     url: string;
+    response: IUploadImage;
 }
 
 export interface IUploadImage {

@@ -1,6 +1,7 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { RESOURCES } from "@constants";
-import { Create, getValueFromEvent } from "@refinedev/antd";
+import { Edit, getValueFromEvent } from "@refinedev/antd";
+import { BaseKey } from "@refinedev/core";
 import {
     Avatar,
     Button,
@@ -22,15 +23,15 @@ import { ICategory, IUploadImage } from "interfaces";
 import React from "react";
 
 const { Text } = Typography;
-type CreateCategoryProps = {
-    formLoading: boolean;
+type EditCategoryProps = {
     drawerProps: DrawerProps;
     formProps: FormProps;
     saveButtonProps: ButtonProps;
+    editId?: BaseKey;
 };
 
-export const CategoryCreate: React.FC<CreateCategoryProps> = ({
-    formLoading,
+export const CategoryEdit: React.FC<EditCategoryProps> = ({
+    editId,
     drawerProps,
     formProps,
     saveButtonProps,
@@ -40,10 +41,17 @@ export const CategoryCreate: React.FC<CreateCategoryProps> = ({
     const handleOnFinish = (values: ICategory) => {
         formProps.onFinish?.({
             ...values,
-            images: values.images.map(({ response, name, uid }) => {
+            images: values.images.map(({ response, name, uid, ...rest }) => {
+                if (response) {
+                    return {
+                        name,
+                        url: response?.secure_url,
+                        uid,
+                    };
+                }
                 return {
+                    ...rest,
                     name,
-                    url: response.secure_url,
                     uid,
                 };
             }),
@@ -56,21 +64,18 @@ export const CategoryCreate: React.FC<CreateCategoryProps> = ({
             width={breakpoint.sm ? "500px" : "100%"}
             zIndex={1001}
         >
-            <Create
+            <Edit
                 resource={RESOURCES.categories}
-                saveButtonProps={{
-                    ...saveButtonProps,
-                    loading: formLoading,
-                    disabled: formLoading,
-                }}
-                title="Tạo danh mục"
+                saveButtonProps={saveButtonProps}
+                canDelete={false}
+                title="Sửa danh mục"
                 goBack={false}
+                recordItemId={editId}
             >
                 <Form
                     {...formProps}
                     onFinish={handleOnFinish}
                     layout="vertical"
-                    initialValues={{ isActive: true }}
                 >
                     <Form.Item
                         label="Tên danh mục"
@@ -219,7 +224,7 @@ export const CategoryCreate: React.FC<CreateCategoryProps> = ({
                                             block
                                             icon={<PlusOutlined />}
                                         >
-                                            Thêm danh mục con
+                                            Add field
                                         </Button>
                                     </Form.Item>
                                 </>
@@ -227,6 +232,17 @@ export const CategoryCreate: React.FC<CreateCategoryProps> = ({
                         </Form.List>
                     </Form.Item>
 
+                    {/* <Form.Item
+                        label="Category"
+                        name={["category", "id"]}
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
+                    >
+                        <Select {...categorySelectProps} />
+                    </Form.Item> */}
                     <Form.Item label="Trạng thái" name="isActive">
                         <Radio.Group>
                             <Radio value={true}>Hiện</Radio>
@@ -234,7 +250,7 @@ export const CategoryCreate: React.FC<CreateCategoryProps> = ({
                         </Radio.Group>
                     </Form.Item>
                 </Form>
-            </Create>
+            </Edit>
         </Drawer>
     );
 };
